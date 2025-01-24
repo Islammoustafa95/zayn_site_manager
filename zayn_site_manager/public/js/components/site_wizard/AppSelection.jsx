@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, Info } from 'lucide-react';
+import { useSiteWizard } from '../context/SiteWizardContext';
 
 const availableApps = {
   Basic: [],
@@ -30,22 +31,20 @@ const appDetails = {
   }
 };
 
-const AppSelection = ({ formData, setFormData, errors }) => {
-  const availableAppsList = availableApps[formData.plan] || [];
+const AppSelection = () => {
+  const { state, updateField } = useSiteWizard();
+  const { plan, selectedApps, error } = state;
+  const availableAppsList = availableApps[plan] || [];
 
   const handleAppToggle = (appName) => {
-    setFormData(prev => {
-      const selected = new Set(prev.selectedApps);
-      if (selected.has(appName)) {
-        selected.delete(appName);
-      } else {
-        selected.add(appName);
-      }
-      return { ...prev, selectedApps: Array.from(selected) };
-    });
+    const newSelectedApps = selectedApps.includes(appName)
+      ? selectedApps.filter(app => app !== appName)
+      : [...selectedApps, appName];
+    
+    updateField('selectedApps', newSelectedApps);
   };
 
-  if (!formData.plan) {
+  if (!plan) {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-medium text-gray-900">
@@ -55,7 +54,7 @@ const AppSelection = ({ formData, setFormData, errors }) => {
     );
   }
 
-  if (formData.plan === 'Basic') {
+  if (plan === 'Basic') {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-medium text-gray-900">
@@ -72,13 +71,17 @@ const AppSelection = ({ formData, setFormData, errors }) => {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">Select Additional Apps</h2>
       
+      {error?.apps && (
+        <div className="text-red-500 text-sm">{error.apps}</div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {availableAppsList.map((appName) => (
           <div
             key={appName}
             className={`rounded-lg border-2 p-6 cursor-pointer transition-all
               ${
-                formData.selectedApps.includes(appName)
+                selectedApps.includes(appName)
                   ? 'border-blue-600 bg-blue-50'
                   : 'border-gray-200 hover:border-blue-300'
               }`}
@@ -86,7 +89,7 @@ const AppSelection = ({ formData, setFormData, errors }) => {
           >
             <div className="flex justify-between items-start">
               <h3 className="text-lg font-semibold text-gray-900">{appName}</h3>
-              {formData.selectedApps.includes(appName) && (
+              {selectedApps.includes(appName) && (
                 <Check className="w-5 h-5 text-blue-600" />
               )}
             </div>

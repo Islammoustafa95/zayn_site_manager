@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
+import { useSiteWizard } from '../context/SiteWizardContext';
 
-const SiteDetails = ({ formData, setFormData, errors }) => {
+const SiteDetails = () => {
+  const { state, updateField } = useSiteWizard();
+  const { error } = state;
   const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    updateField(name, value);
     
     if (name === 'subdomain') {
       setIsCheckingSubdomain(true);
@@ -17,9 +20,11 @@ const SiteDetails = ({ formData, setFormData, errors }) => {
           body: JSON.stringify({ subdomain: value })
         });
         const data = await response.json();
-        // Handle subdomain availability
-      } catch (error) {
-        console.error('Error checking subdomain:', error);
+        if (!data.message.available) {
+          updateField('error', { ...error, subdomain: 'This subdomain is already taken' });
+        }
+      } catch (err) {
+        console.error('Error checking subdomain:', err);
       }
       setIsCheckingSubdomain(false);
     }
@@ -37,14 +42,14 @@ const SiteDetails = ({ formData, setFormData, errors }) => {
           <input
             type="text"
             name="siteName"
-            value={formData.siteName}
+            value={state.siteName}
             onChange={handleInputChange}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
-              ${errors.siteName ? 'border-red-500' : ''}`}
+              ${error?.siteName ? 'border-red-500' : ''}`}
             placeholder="My Company ERP"
           />
-          {errors.siteName && (
-            <p className="mt-1 text-sm text-red-500">{errors.siteName}</p>
+          {error?.siteName && (
+            <p className="mt-1 text-sm text-red-500">{error.siteName}</p>
           )}
         </div>
 
@@ -56,10 +61,10 @@ const SiteDetails = ({ formData, setFormData, errors }) => {
             <input
               type="text"
               name="subdomain"
-              value={formData.subdomain}
+              value={state.subdomain}
               onChange={handleInputChange}
               className={`block w-full rounded-l-md border-gray-300 focus:border-blue-500 focus:ring-blue-500
-                ${errors.subdomain ? 'border-red-500' : ''}`}
+                ${error?.subdomain ? 'border-red-500' : ''}`}
               placeholder="mycompany"
             />
             <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500">
@@ -69,8 +74,8 @@ const SiteDetails = ({ formData, setFormData, errors }) => {
           {isCheckingSubdomain && (
             <p className="mt-1 text-sm text-blue-500">Checking availability...</p>
           )}
-          {errors.subdomain && (
-            <p className="mt-1 text-sm text-red-500">{errors.subdomain}</p>
+          {error?.subdomain && (
+            <p className="mt-1 text-sm text-red-500">{error.subdomain}</p>
           )}
         </div>
 
@@ -81,14 +86,14 @@ const SiteDetails = ({ formData, setFormData, errors }) => {
           <input
             type="email"
             name="email"
-            value={formData.email}
+            value={state.email}
             onChange={handleInputChange}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
-              ${errors.email ? 'border-red-500' : ''}`}
+              ${error?.email ? 'border-red-500' : ''}`}
             placeholder="admin@mycompany.com"
           />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+          {error?.email && (
+            <p className="mt-1 text-sm text-red-500">{error.email}</p>
           )}
         </div>
       </div>

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { useSiteWizard } from '../context/SiteWizardContext';
+import PlanSelection from './PlanSelection';
+import SiteDetails from './SiteDetails';
+import AppSelection from './AppSelection';
+import ReviewStep from './ReviewStep';
 
 const steps = [
   { id: 'plan', title: 'Select Plan' },
@@ -11,32 +15,27 @@ const steps = [
 
 const SiteWizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({
-    plan: '',
-    siteName: '',
-    subdomain: '',
-    email: '',
-    selectedApps: [],
-  });
-  const [errors, setErrors] = useState({});
+  const { state, updateField, setError } = useSiteWizard();
 
   const validateStep = (step) => {
-    const newErrors = {};
+    const errors = {};
     switch (step) {
       case 0:
-        if (!formData.plan) newErrors.plan = 'Please select a plan';
+        if (!state.plan) errors.plan = 'Please select a plan';
         break;
       case 1:
-        if (!formData.siteName) newErrors.siteName = 'Site name is required';
-        if (!formData.subdomain) newErrors.subdomain = 'Subdomain is required';
-        if (!formData.email) newErrors.email = 'Email is required';
+        if (!state.siteName) errors.siteName = 'Site name is required';
+        if (!state.subdomain) errors.subdomain = 'Subdomain is required';
+        if (!state.email) errors.email = 'Email is required';
         break;
       case 2:
-        // Apps selection validation if needed
+        if (state.plan !== 'Basic' && state.selectedApps.length === 0) {
+          errors.apps = 'Please select at least one app';
+        }
         break;
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setError(Object.keys(errors).length > 0 ? errors : null);
+    return Object.keys(errors).length === 0;
   };
 
   const handleNext = () => {
@@ -52,13 +51,13 @@ const SiteWizard = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return <PlanSelection formData={formData} setFormData={setFormData} errors={errors} />;
+        return <PlanSelection />;
       case 1:
-        return <SiteDetails formData={formData} setFormData={setFormData} errors={errors} />;
+        return <SiteDetails />;
       case 2:
-        return <AppSelection formData={formData} setFormData={setFormData} errors={errors} />;
+        return <AppSelection />;
       case 3:
-        return <ReviewStep formData={formData} />;
+        return <ReviewStep />;
       default:
         return null;
     }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { useSiteWizard } from '../context/SiteWizardContext';
 
 const plans = [
   {
@@ -37,9 +38,14 @@ const plans = [
   }
 ];
 
-const PlanSelection = ({ formData, setFormData, errors }) => {
+const PlanSelection = () => {
+  const { state, updateField } = useSiteWizard();
+  const { error } = state;
+
   const handlePlanSelect = (planName) => {
-    setFormData({ ...formData, plan: planName });
+    updateField('plan', planName);
+    // Reset selected apps when changing plans
+    updateField('selectedApps', []);
   };
 
   return (
@@ -51,7 +57,7 @@ const PlanSelection = ({ formData, setFormData, errors }) => {
             key={plan.name}
             className={`rounded-lg border-2 p-6 cursor-pointer transition-all
               ${
-                formData.plan === plan.name
+                state.plan === plan.name
                   ? 'border-blue-600 bg-blue-50'
                   : 'border-gray-200 hover:border-blue-300'
               }`}
@@ -74,7 +80,7 @@ const PlanSelection = ({ formData, setFormData, errors }) => {
               ))}
             </div>
 
-            {formData.plan === plan.name && (
+            {state.plan === plan.name && (
               <div className="mt-4 text-center">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
                   Selected
@@ -84,8 +90,8 @@ const PlanSelection = ({ formData, setFormData, errors }) => {
           </div>
         ))}
       </div>
-      {errors.plan && (
-        <div className="text-red-500 text-sm mt-2">{errors.plan}</div>
+      {error?.plan && (
+        <div className="text-red-500 text-sm mt-2">{error.plan}</div>
       )}
     </div>
   );
