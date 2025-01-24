@@ -5,6 +5,13 @@ app_description = "Zayn site manager"
 app_email = "moustafa.imym@gmail.com"
 app_license = "mit"
 
+# API endpoints
+api_version = 1
+
+website_route_rules = [
+    {"from_route": "/api/method/zayn_site_manager.api.domain_management.check_subdomain", "to_route": "api/method/zayn_site_manager.api.domain_management.check_subdomain"}
+]
+
 # Apps
 # ------------------
 
