@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useSiteWizard } from '../context/SiteWizardContext';
+import { createSite } from '../services/api';
 import PlanSelection from './PlanSelection';
 import SiteDetails from './SiteDetails';
 import AppSelection from './AppSelection';
@@ -15,7 +16,8 @@ const steps = [
 
 const SiteWizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const { state, updateField, setError } = useSiteWizard();
+  const { state, setLoading, setError } = useSiteWizard();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateStep = (step) => {
     const errors = {};
@@ -27,6 +29,9 @@ const SiteWizard = () => {
         if (!state.siteName) errors.siteName = 'Site name is required';
         if (!state.subdomain) errors.subdomain = 'Subdomain is required';
         if (!state.email) errors.email = 'Email is required';
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+          errors.email = 'Invalid email format';
+        }
         break;
       case 2:
         if (state.plan !== 'Basic' && state.selectedApps.length === 0) {
@@ -46,6 +51,28 @@ const SiteWizard = () => {
 
   const handleBack = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      const response = await createSite(state);
+      
+      if (response.success) {
+        // Show success message and redirect to status page
+        frappe.show_alert({
+          message: __('Site creation initiated successfully!'),
+          indicator: 'green'
+        });
+        window.location.href = `/app/zaynsite/${response.site_id}`;
+      } else {
+        setError({ submit: response.message });
+      }
+    } catch (error) {
+      setError({ submit: 'Failed to create site. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStepContent = () => {
@@ -93,6 +120,10 @@ const SiteWizard = () => {
         {renderStepContent()}
       </div>
 
+      {state.error?.submit && (
+        <div className="text-red-500 text-sm mb-4">{state.error.submit}</div>
+      )}
+
       <div className="flex justify-between mt-6">
         <button
           onClick={handleBack}
@@ -107,10 +138,11 @@ const SiteWizard = () => {
           Back
         </button>
         <button
-          onClick={handleNext}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={currentStep === steps.length - 1 ? handleSubmit : handleNext}
+          disabled={isSubmitting}
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {currentStep === steps.length - 1 ? 'Create Site' : 'Next'}
+          {isSubmitting ? 'Processing...' : currentStep === steps.length - 1 ? 'Create Site' : 'Next'}
           <ChevronRight className="w-4 h-4 ml-2" />
         </button>
       </div>
