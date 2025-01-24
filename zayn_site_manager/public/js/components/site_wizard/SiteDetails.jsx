@@ -1,37 +1,41 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import { useSiteWizard } from '../context/SiteWizardContext';
+import { checkSubdomain } from '../services/api';
+import { LoadingSpinner } from './common/LoadingSpinner';
+import ErrorAlert from './common/ErrorAlert';
 
 const SiteDetails = () => {
-  const { state, updateField } = useSiteWizard();
-  const { error } = state;
-  const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
+  const { state, updateField, setLoading, setError } = useSiteWizard();
+  const { errors, loading } = state;
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     updateField(name, value);
     
     if (name === 'subdomain') {
-      setIsCheckingSubdomain(true);
+      setLoading('subdomain', true);
       try {
-        const response = await fetch('/api/method/zayn_site_manager.api.domain_management.check_subdomain', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ subdomain: value })
-        });
-        const data = await response.json();
-        if (!data.message.available) {
-          updateField('error', { ...error, subdomain: 'This subdomain is already taken' });
+        const response = await checkSubdomain(value);
+        if (!response.message.available) {
+          setError('subdomain', 'This subdomain is already taken');
         }
-      } catch (err) {
-        console.error('Error checking subdomain:', err);
+      } catch (error) {
+        setError('subdomain', 'Failed to check subdomain availability');
       }
-      setIsCheckingSubdomain(false);
+      setLoading('subdomain', false);
     }
   };
 
   return (
     <div className="space-y-6">
+      {state.globalError && (
+        <ErrorAlert 
+          message={state.globalError} 
+          onClose={() => setError('global', null)} 
+        />
+      )}
+
       <h2 className="text-2xl font-bold text-gray-900">Site Details</h2>
       
       <div className="space-y-4">
@@ -45,11 +49,11 @@ const SiteDetails = () => {
             value={state.siteName}
             onChange={handleInputChange}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
-              ${error?.siteName ? 'border-red-500' : ''}`}
+              ${errors?.siteName ? 'border-red-500' : ''}`}
             placeholder="My Company ERP"
           />
-          {error?.siteName && (
-            <p className="mt-1 text-sm text-red-500">{error.siteName}</p>
+          {errors?.siteName && (
+            <p className="mt-1 text-sm text-red-500">{errors.siteName}</p>
           )}
         </div>
 
@@ -64,18 +68,20 @@ const SiteDetails = () => {
               value={state.subdomain}
               onChange={handleInputChange}
               className={`block w-full rounded-l-md border-gray-300 focus:border-blue-500 focus:ring-blue-500
-                ${error?.subdomain ? 'border-red-500' : ''}`}
+                ${errors?.subdomain ? 'border-red-500' : ''}`}
               placeholder="mycompany"
             />
             <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500">
               .zayn.com
             </span>
           </div>
-          {isCheckingSubdomain && (
-            <p className="mt-1 text-sm text-blue-500">Checking availability...</p>
+          {loading.subdomain && (
+            <div className="mt-1">
+              <LoadingSpinner />
+            </div>
           )}
-          {error?.subdomain && (
-            <p className="mt-1 text-sm text-red-500">{error.subdomain}</p>
+          {errors?.subdomain && (
+            <p className="mt-1 text-sm text-red-500">{errors.subdomain}</p>
           )}
         </div>
 
@@ -89,11 +95,11 @@ const SiteDetails = () => {
             value={state.email}
             onChange={handleInputChange}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
-              ${error?.email ? 'border-red-500' : ''}`}
+              ${errors?.email ? 'border-red-500' : ''}`}
             placeholder="admin@mycompany.com"
           />
-          {error?.email && (
-            <p className="mt-1 text-sm text-red-500">{error.email}</p>
+          {errors?.email && (
+            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
           )}
         </div>
       </div>
