@@ -1,0 +1,62 @@
+{
+    "actions": [],
+    "creation": "2024-01-25 10:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "app_name",
+        "status",
+        "version",
+        "installation_date",
+        "last_update",
+        "error_log"
+    ],
+    "fields": [
+        {
+            "fieldname": "app_name",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "App Name",
+            "options": "HR\nProperty Management\nLogistics\nPOS\nEcommerce\nAdvanced Analytics",
+            "reqd": 1
+        },
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Status",
+            "options": "Pending\nInstalling\nActive\nFailed",
+            "default": "Pending"
+        },
+        {
+            "fieldname": "version",
+            "fieldtype": "Data",
+            "label": "Version"
+        },
+        {
+            "fieldname": "installation_date",
+            "fieldtype": "Datetime",
+            "label": "Installation Date"
+        },
+        {
+            "fieldname": "last_update",
+            "fieldtype": "Datetime",
+            "label": "Last Update"
+        },
+        {
+            "fieldname": "error_log",
+            "fieldtype": "Small Text",
+            "label": "Error Log"
+        }
+    ],
+    "istable": 1,
+    "modified": "2024-01-25 10:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Zayn Site Manager",
+    "name": "ZaynSiteApp",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC"
+}

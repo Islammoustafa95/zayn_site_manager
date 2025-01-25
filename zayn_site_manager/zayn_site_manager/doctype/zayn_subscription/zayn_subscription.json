@@ -1,0 +1,137 @@
+{
+    "actions": [],
+    "allow_rename": 0,
+    "creation": "2024-01-25 10:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "site",
+        "plan_type",
+        "status",
+        "billing_section",
+        "billing_cycle",
+        "billing_contact",
+        "payment_method",
+        "dates_section",
+        "start_date",
+        "end_date",
+        "last_billing_date",
+        "next_billing_date",
+        "features_section",
+        "allowed_apps",
+        "custom_features"
+    ],
+    "fields": [
+        {
+            "fieldname": "site",
+            "fieldtype": "Link",
+            "label": "Site",
+            "options": "ZaynSite",
+            "reqd": 1
+        },
+        {
+            "fieldname": "plan_type",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Plan Type",
+            "options": "Basic\nStandard\nPro\nEnterprise",
+            "reqd": 1
+        },
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Status",
+            "options": "Trial\nActive\nPast Due\nCancelled",
+            "reqd": 1
+        },
+        {
+            "fieldname": "billing_section",
+            "fieldtype": "Section Break",
+            "label": "Billing Information"
+        },
+        {
+            "fieldname": "billing_cycle",
+            "fieldtype": "Select",
+            "label": "Billing Cycle",
+            "options": "Monthly\nAnnual",
+            "reqd": 1
+        },
+        {
+            "fieldname": "billing_contact",
+            "fieldtype": "Data",
+            "label": "Billing Contact Email",
+            "reqd": 1
+        },
+        {
+            "fieldname": "payment_method",
+            "fieldtype": "Data",
+            "label": "Payment Method"
+        },
+        {
+            "fieldname": "dates_section",
+            "fieldtype": "Section Break",
+            "label": "Important Dates"
+        },
+        {
+            "fieldname": "start_date",
+            "fieldtype": "Date",
+            "label": "Start Date",
+            "reqd": 1
+        },
+        {
+            "fieldname": "end_date",
+            "fieldtype": "Date",
+            "label": "End Date"
+        },
+        {
+            "fieldname": "last_billing_date",
+            "fieldtype": "Date",
+            "label": "Last Billing Date"
+        },
+        {
+            "fieldname": "next_billing_date",
+            "fieldtype": "Date",
+            "label": "Next Billing Date"
+        },
+        {
+            "fieldname": "features_section",
+            "fieldtype": "Section Break",
+            "label": "Features and Apps"
+        },
+        {
+            "fieldname": "allowed_apps",
+            "fieldtype": "Table",
+            "label": "Allowed Apps",
+            "options": "ZaynSubscriptionApp"
+        },
+        {
+            "fieldname": "custom_features",
+            "fieldtype": "JSON",
+            "label": "Custom Features"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2024-01-25 10:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Zayn Site Manager",
+    "name": "ZaynSubscription",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC"
+}
