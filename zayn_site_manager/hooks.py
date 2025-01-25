@@ -38,3 +38,22 @@ scheduler_events = {
         "zayn_site_manager.tasks.check_subscription_status"
     ]
 }
+
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [["module", "=", "Zayn Site Manager"]]
+    }
+]
+
+doctype_list = [
+    "ZaynSite",
+    "ZaynSiteApp",
+    "ZaynSubscription",
+    "ZaynSubscriptionApp",
+    "ZaynERPSettings"
+]
+
+doctypes = {
+    "Zayn Site Manager": doctype_list
+}
