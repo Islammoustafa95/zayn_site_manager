@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include zayn_site_manager *.css
+recursive-include zayn_site_manager *.csv
+recursive-include zayn_site_manager *.html
+recursive-include zayn_site_manager *.ico
+recursive-include zayn_site_manager *.js
+recursive-include zayn_site_manager *.json
+recursive-include zayn_site_manager *.md
+recursive-include zayn_site_manager *.png
+recursive-include zayn_site_manager *.py
+recursive-include zayn_site_manager *.svg
+recursive-include zayn_site_manager *.txt
+recursive-exclude zayn_site_manager *.pyc
