@@ -1,1 +1,7 @@
 Zayn Site Manager
+zayn_site_manager
+zayn_site_manager.doctype.zaynerp_settings
+zayn_site_manager.doctype.zayn_site
+zayn_site_manager.doctype.zayn_site_app
+zayn_site_manager.doctype.zayn_subscription
+zayn_site_manager.doctype.zayn_subscription_app

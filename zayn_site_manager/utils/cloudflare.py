@@ -13,14 +13,13 @@ class CloudflareAPI:
         }
 
     def create_dns_record(self, subdomain):
-        """Create A record for subdomain pointing to server IP"""
         try:
             url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
             data = {
                 "type": "A",
-                "name": f"{subdomain}.zaynerp.com",
+                "name": f"{subdomain}.zaynerp.com",  # Updated domain
                 "content": "95.216.242.172",
-                "ttl": 1,  # Auto
+                "ttl": 1,
                 "proxied": True
             }
             
