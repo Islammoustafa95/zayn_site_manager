@@ -1,0 +1,15 @@
+<!-- subscription_trial_ending.html -->
+<h2>Your Trial Period is Ending Soon</h2>
+
+<p>Dear User,</p>
+
+<p>Your trial period for <strong>{{ site_name }}</strong> will end in {{ days_remaining }} days.</p>
+
+<p>To continue using your site uninterrupted, please set up your billing information in the admin panel.</p>
+
+<p>Current Plan: {{ plan_type }}</p>
+<p>Monthly Price: ${{ plan_price }}</p>
+
+<div style="text-align: center; margin: 20px 0;">
+    <a href="{{ billing_url }}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Set Up Billing</a>
+</div>

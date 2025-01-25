@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import now_datetime, add_months
 from zayn_site_manager.api.domain_management import validate_subdomain_format
+from zayn_site_manager.utils.cloudflare import setup_site_dns
 
 PLAN_DETAILS = {
     'Basic': {'max_users': 3, 'apps': []},
@@ -44,6 +45,9 @@ def create_site():
         # Validate plan and apps
         validate_plan_and_apps(plan, selected_apps)
 
+        # Create DNS record first
+        setup_site_dns(subdomain)
+
         # Create site record
         site = frappe.get_doc({
             'doctype': 'ZaynSite',
@@ -72,15 +76,14 @@ def create_site():
         site.subscription = subscription.name
         site.save()
 
-        # Queue app installation
-        if selected_apps:
-            frappe.enqueue(
-                'zayn_site_manager.api.background_jobs.setup_site',
-                site_name=site.name,
-                apps=selected_apps,
-                queue='long',
-                timeout=1500
-            )
+        # Queue site setup and app installation
+        frappe.enqueue(
+            'zayn_site_manager.api.background_jobs.setup_site',
+            site_name=site.name,
+            apps=selected_apps,
+            queue='long',
+            timeout=1500
+        )
 
         return {
             'success': True,
@@ -90,6 +93,15 @@ def create_site():
 
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), 'Site Creation Error')
+        
+        # Cleanup DNS if it was created
+        if frappe.db.exists('ZaynSite', {'subdomain': subdomain}):
+            site_doc = frappe.get_doc('ZaynSite', {'subdomain': subdomain})
+            if site_doc.dns_record_id:
+                from zayn_site_manager.utils.cloudflare import CloudflareAPI
+                cf = CloudflareAPI()
+                cf.delete_dns_record(site_doc.dns_record_id)
+        
         return {
             'success': False,
             'message': str(e)

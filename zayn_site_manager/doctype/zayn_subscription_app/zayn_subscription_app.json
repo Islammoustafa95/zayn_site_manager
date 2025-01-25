@@ -1,0 +1,50 @@
+{
+    "actions": [],
+    "creation": "2024-01-25 10:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "app_name",
+        "app_status",
+        "activation_date",
+        "expiry_date"
+    ],
+    "fields": [
+        {
+            "fieldname": "app_name",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "App Name",
+            "options": "HR\nProperty Management\nLogistics\nPOS\nEcommerce\nAdvanced Analytics",
+            "reqd": 1
+        },
+        {
+            "fieldname": "app_status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Status",
+            "options": "Enabled\nDisabled",
+            "default": "Enabled"
+        },
+        {
+            "fieldname": "activation_date",
+            "fieldtype": "Date",
+            "label": "Activation Date"
+        },
+        {
+            "fieldname": "expiry_date",
+            "fieldtype": "Date",
+            "label": "Expiry Date"
+        }
+    ],
+    "istable": 1,
+    "modified": "2024-01-25 10:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Zayn Site Manager",
+    "name": "ZaynSubscriptionApp",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC"
+}
