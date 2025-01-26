@@ -9,6 +9,14 @@ version="0.0.1"
 # API endpoints
 api_version = 1
 
+doctype_list = [
+    "ZaynSite",
+    "ZaynSiteApp", 
+    "ZaynSubscription",
+    "ZaynSubscriptionApp",
+    "ZaynERPSettings"
+]
+
 website_route_rules = [
     {"from_route": "/api/method/zayn_site_manager.api.domain_management.check_subdomain", "to_route": "api/method/zayn_site_manager.api.domain_management.check_subdomain"}
 ]
