@@ -14,3 +14,18 @@ doctype_list = [
     "ZaynSubscriptionApp",
     "ZaynERPSettings"
 ]
+
+fixtures = [
+    {
+        "dt": "DocType",
+        "filters": [
+            ["name", "in", [
+                "ZaynSite",
+                "ZaynSiteApp",
+                "ZaynSubscription", 
+                "ZaynSubscriptionApp",
+                "ZaynERPSettings"
+            ]]
+        ]
+    }
+]
